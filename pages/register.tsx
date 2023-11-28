@@ -22,7 +22,7 @@ export default function Login() {
   if (user) router.push("/");
 
   return (
-    <main className="mx-auto flex min-h-screen w-full items-center justify-center bg-gray-900 text-white">
+    <main className="mx-auto flex w-full items-center justify-center bg-gray-900 text-white mt-16">
       <form
         className="flex w-[30rem] flex-col space-y-10"
         onSubmit={handleSubmit}
