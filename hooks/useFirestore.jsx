@@ -63,7 +63,7 @@ export const useFirestore = (coll) => {
 
       if (attachedFile) {
         // If there is an attached file, upload it to storage
-        const uploadPath = `items/${docRef.id}/${attachedFile.name}`;
+        const uploadPath = `items/${res.id}/${attachedFile.name}`;
         const storageRef = ref(storage, uploadPath);
   
         const uploadTask = uploadBytesResumable(storageRef, attachedFile);
@@ -74,11 +74,15 @@ export const useFirestore = (coll) => {
         // Get the download URL of the uploaded file
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
   
+        console.log(downloadURL);
+
         // Update the document in Firestore with the download URL
-        await setDoc(doc(db, coll, docRef.id), {
+        await setDoc(doc(db, coll, res.id), {
           ...document,
           attachedFile: downloadURL,
         });
+
+
       }
 
       //console.log(res);

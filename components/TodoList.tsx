@@ -4,6 +4,7 @@ import { useCollection } from "../hooks/useCollection";
 import OpenIcon from "./OpenIcon";
 import EditIcon from "./EditIcon";
 import DeleteIcon from "./DeleteIcon";
+import Image from "next/image";
 
 export default function TodoList() {
   const { user } = useAuthContext();
@@ -21,8 +22,10 @@ export default function TodoList() {
             key={doc.id}
             className="max-w-md rounded-lg border border-gray-200 bg-gray-800 shadow-md flex flex-col text-white"
           >
-            <img className="rounded-t-lg" src="" alt="" />
-  
+            {doc.attachedFile && (
+              <img className="rounded-t-lg" src={doc.attachedFile} alt=""/>
+            )}
+
             <div className="flex flex-col flex-grow p-5">
               <h5 className="text-2xl font-bold tracking-tight mb-2">
                 {doc.title.length > 100
@@ -45,5 +48,4 @@ export default function TodoList() {
       </>
     )
   );
-  
 }

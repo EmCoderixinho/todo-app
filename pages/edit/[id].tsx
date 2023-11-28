@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { db } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import styles from '../../styles/new.module.css'
 import { collection, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ref } from "firebase/storage";
+import { getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 export const getStaticPaths = async () => {
 
@@ -113,6 +115,28 @@ const Todo = ({ item }) => {
     
 
     const res = await setDoc(doc(db, "todo-items", item.id), todoItem);
+
+    if (attachedFile) {
+        // If there is an attached file, upload it to storage
+        const uploadPath = `items/${item.id}/${attachedFile.name}`;
+        const storageRef = ref(storage, uploadPath);
+  
+        const uploadTask = uploadBytesResumable(storageRef, attachedFile);
+  
+        // Wait for the upload to complete
+        await uploadTask;
+  
+        // Get the download URL of the uploaded file
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  
+        console.log(downloadURL);
+
+        // Update the document in Firestore with the download URL
+        await setDoc(doc(db, 'todo-items', item.id), {
+          ...todoItem,
+          attachedFile: downloadURL,
+        });
+      }
 
     router.push('/');
     

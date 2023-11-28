@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Image from "next/image";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useCollection } from "../hooks/useCollection";
 
@@ -21,7 +21,9 @@ export default function Public() {
             key={doc.id}
             className="max-w-md w-full md:w-1/2 lg:w-1/3 xl:w-1/4 rounded-lg border border-gray-700 bg-gray-800 shadow-md mb-4"
           >
-            <img className="rounded-t-lg" src="" alt="" />
+            {doc.attachedFile && (
+              <img className="rounded-t-lg" src={doc.attachedFile} alt="" />
+            )}
   
             <div className="flex flex-col flex-grow p-5">
               <h5 className="text-2xl font-bold tracking-tight text-gray-200 mb-2">

@@ -16,6 +16,7 @@ export default function Home() {
   const { user } = useAuthContext();
   const [attachedFile, setAttachedFile] = useState(null);
   const { addDocument, response } = useFirestore("todo-items");
+  const [fileError, setFileError] = useState('')
 
   const router = useRouter();
 
@@ -28,10 +29,15 @@ export default function Home() {
 
     let selected = e.target.files[0];
 
-    if (!selected || !selected.type.includes("image")) {
+    if(!selected) return;
+
+    if (!selected.type.includes("image")) {
+
+      setFileError('Please select an image')
       return;
     }
 
+    setFileError('');
     setAttachedFile(selected);
   };
 
@@ -71,12 +77,12 @@ export default function Home() {
     //console.log(user);
 
     addDocument(todoItem, attachedFile);
+
+    ///router.push('/');
   };
 
   useEffect(() => {
     if (response.succes) {
-      
-      console.log(response.succes);
       
       router.push('/');
     }
@@ -158,7 +164,7 @@ export default function Home() {
                   <span className="ml-2 text-sm text-gray-300">Choose a file</span>
                 </>
               )}
-  
+
               {attachedFile && (
                 <>
                   <span className="ml-2 text-sm text-gray-300">Chosen file: {attachedFile.name}</span>
@@ -166,6 +172,7 @@ export default function Home() {
               )}
             </div>
           </div>
+          {fileError !== '' && <p className="ml-2 text-sm text-red-600 mt-2">{fileError}</p>}
         </div>
   
         <div className="flex items-center mb-4">

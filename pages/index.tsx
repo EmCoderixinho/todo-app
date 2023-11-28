@@ -16,9 +16,6 @@ export default function Home() {
     return null;
   }
 
-  const handleClick = () => {
-    //console.log(documents);
-  };
   //authisready==false pokazi loading
   // u ovom divu dobavi dokumente i ispisi ih
   return (
