@@ -3,6 +3,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 export const useCollection = (coll, _query) => {
+  
   const [documents, setDocuments] = useState(null);
   const [error, setError] = useState(null);
 
@@ -14,7 +15,7 @@ export const useCollection = (coll, _query) => {
 
     //console.log(query1);
 
-    if(query1[2]) q = query(collection(db, "users"), where(query1[0], query1[1], query1[2]));
+    if(query1.length > 0 && query1[2]) q = query(collection(db, coll), where(query1[0], query1[1], query1[2]));
     else return;
 
     //console.log(q);

@@ -17,8 +17,8 @@ export const useLogin = () => {
       await signInWithEmailAndPassword(auth, email, password).then( //try to sign in with email and password to the firebase
         (userCredential) => {
           if (!isCancelled)
-            if (userCredential.user.uid) { //if we did sign in then update userContext and pending is now false
-              dispatch({ type: "LOGIN", payload: userCredential.user.uid });
+            if (userCredential.user) { //if we did sign in then update userContext and pending is now false
+              dispatch({ type: "LOGIN", payload: userCredential.user });
               setIsPending(false);
               setError(null);
             } else throw new Error("Could not log in");

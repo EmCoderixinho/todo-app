@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 
-import styles from "../styles/new.module.css"
+import styles from "../styles/new.module.css";
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -64,16 +64,21 @@ export default function Home() {
       minutes,
       isPublic,
       attachedFile: null,
+      done: false,
     };
 
-    console.log(todoItem);
+    //console.log(todoItem);
+    //console.log(user);
 
     addDocument(todoItem, attachedFile);
   };
 
   useEffect(() => {
     if (response.succes) {
-      //router.push('/');
+      
+      console.log(response.succes);
+      
+      router.push('/');
     }
   }, [response.succes]);
 
@@ -83,7 +88,9 @@ export default function Home() {
   }
   //authisready==false pokazi loading
   return (
-    <div className={`${styles.new} dark:bg-gray-900 dark:border-gray-700 bg-gray-100 flex items-center justify-center relative`}>
+    <div
+      className={`${styles.new} dark:bg-gray-900 dark:border-gray-700 bg-gray-100 flex items-center justify-center relative`}
+    >
       <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           {/* Post Content Section */}
@@ -95,6 +102,7 @@ export default function Home() {
               Title:
             </label>
             <input
+              required
               type="text"
               id="title"
               name="title"
@@ -114,13 +122,14 @@ export default function Home() {
               Description:
             </label>
             <textarea
+              required
               id="description"
               name="description"
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-              rows={4}
+              rows={6}
               className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700 text-gray-200"
               placeholder="Add description"
             ></textarea>

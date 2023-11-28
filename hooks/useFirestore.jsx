@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from "react";
 import { db, storage } from "../firebase/config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, deleteDoc, addDoc, collection, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 let initalState = {
   document: null,
   isPending: false,
@@ -44,6 +45,7 @@ const firestoreReducer = (state, action) => {
 };
 
 export const useFirestore = (coll) => {
+  const router = useRouter();
   const [response, dispatch] = useReducer(firestoreReducer, initalState);
   const [isCancelled, setIsCanceled] = useState(false);
 
@@ -56,41 +58,37 @@ export const useFirestore = (coll) => {
     dispatchIfNotCanceled({ type: "IS_PENDING" });
 
     try {
+
       let res = await addDoc(collection(db, coll), document);
 
       if (attachedFile) {
-        //console.log(document.attachedFile);
-
-        const uploadPath = `items/${res.id}/${attachedFile.name}`;
+        // If there is an attached file, upload it to storage
+        const uploadPath = `items/${docRef.id}/${attachedFile.name}`;
         const storageRef = ref(storage, uploadPath);
-
+  
         const uploadTask = uploadBytesResumable(storageRef, attachedFile);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            //console.log("Upload is " + progress + "% done");
-          },
-          (error) => {},
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              //console.log("File available at", downloadURL);
-              document.attachedFile = downloadURL;
-              setDoc(doc(db, coll, res.id), document);
-            });
-          }
-        );
+  
+        // Wait for the upload to complete
+        await uploadTask;
+  
+        // Get the download URL of the uploaded file
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  
+        // Update the document in Firestore with the download URL
+        await setDoc(doc(db, coll, docRef.id), {
+          ...document,
+          attachedFile: downloadURL,
+        });
       }
 
-      console.log(res);
+      //console.log(res);
 
       if (!res) {
         throw new Error("Could not complete item upload");
       }
 
       dispatchIfNotCanceled({ type: "ADD_DOCUMENT", payload: document });
+      router.push('/');
     } catch (err) {
       dispatchIfNotCanceled({ type: "ERROR", payload: err.message });
     }

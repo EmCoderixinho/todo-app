@@ -19,7 +19,7 @@ export const useSignup = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
-          console.log("User created:", userCredential);
+         // console.log("User created:", userCredential);
 
           dispatch({ type: "LOGIN", payload: userCredential.user });
 
@@ -30,7 +30,7 @@ export const useSignup = () => {
             fullName,
           });
 
-          console.log("Document created in Firestore");
+          //console.log("Document created in Firestore");
 
           if (!isCancelled) {
             setError(null);
