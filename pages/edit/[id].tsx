@@ -121,17 +121,12 @@ const Todo = ({ item }) => {
   };
 
   return (
-    <div
-      className={`${styles.new} dark:bg-gray-900 dark:border-gray-700 bg-gray-100 flex items-center justify-center relative`}
-    >
-      <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-md">
+    <div className={`${styles.new} bg-gray-900 flex items-center justify-center relative`}>
+      <div className="max-w-md w-full p-8 rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           {/* Post Content Section */}
           <div className="mb-6">
-            <label
-              htmlFor="title"
-              className="block text-gray-200 text-sm font-bold mb-2"
-            >
+            <label htmlFor="title" className="block text-gray-200 text-sm font-bold mb-2">
               Title:
             </label>
             <input
@@ -143,14 +138,12 @@ const Todo = ({ item }) => {
               onChange={(e) => {
                 setTitle(e.target.value);
               }}
-              className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700 text-gray-200"
+              
+              className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 text-gray-200 bg-gray-700"
             />
           </div>
           <div className="mb-6">
-            <label
-              htmlFor="description"
-              className="block text-gray-200 text-sm font-bold mb-2"
-            >
+            <label htmlFor="description" className="block text-gray-200 text-sm font-bold mb-2">
               Description:
             </label>
             <textarea
@@ -163,14 +156,12 @@ const Todo = ({ item }) => {
               }}
               rows={6}
               className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700 text-gray-200"
+              placeholder="Add description"
             ></textarea>
           </div>
           {/* File Attachment Section */}
           <div className="mb-6">
-            <label
-              htmlFor="fileAttachment"
-              className="block text-gray-200 text-sm font-bold mb-2"
-            >
+            <label htmlFor="fileAttachment" className="block text-gray-200 text-sm font-bold mb-2">
               Attach File:
             </label>
             <div className="relative border-2 rounded-md px-4 py-3 bg-gray-700 flex items-center justify-between hover:border-blue-500 transition duration-150 ease-in-out">
@@ -179,7 +170,7 @@ const Todo = ({ item }) => {
                 id="fileAttachment"
                 name="fileAttachment"
                 onChange={handleFileChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-gray-200"
               />
               <div className="flex items-center">
                 {!attachedFile && (
@@ -198,12 +189,10 @@ const Todo = ({ item }) => {
                         d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                       ></path>
                     </svg>
-                    <span className="ml-2 text-sm text-gray-300">
-                      Choose a file
-                    </span>
+                    <span className="ml-2 text-sm text-gray-300">Choose a file</span>
                   </>
                 )}
-
+  
                 {attachedFile && (
                   <>
                     <span className="ml-2 text-sm text-gray-300">
@@ -214,63 +203,55 @@ const Todo = ({ item }) => {
               </div>
             </div>
           </div>
-
+  
           <div className="flex items-center mb-4">
             <input
               id="deadline_box"
               type="checkbox"
               checked={hasDeadline}
               onChange={(e) => setHasDeadline(e.target.checked)}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
             />
-            <label
-              htmlFor="deadline_box"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+            <label htmlFor="deadline_box" className="ms-2 text-sm font-medium text-gray-200">
               Has deadline
             </label>
           </div>
-
+  
           <div className="mb-6">
-            <label
-              htmlFor="deadline"
-              className="block text-gray-200 text-sm font-bold mb-2"
-            >
+            <label htmlFor="deadline" className="block text-gray-200 text-sm font-bold mb-2">
               Deadline:
             </label>
+            {/* Assume the DatePicker component renders properly in dark mode */}
             <DatePicker
               id="deadline"
               selected={selectedDate}
               onChange={handleDateChange}
               showTimeSelect
               dateFormat="Pp"
-              className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700 text-gray-200"
+              className="text-gray-200 w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700"
             />
           </div>
-
+  
           <div className="flex items-center mb-4">
             <input
               id="public"
               type="checkbox"
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
             />
-            <label
-              htmlFor="public"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+            <label htmlFor="public" className="ms-2 text-sm font-medium text-gray-200">
               Public
             </label>
           </div>
-
+  
           {/* Submit Button and Character Limit Section */}
           <div className="flex items-center justify-between">
             <button
               type="submit"
               className="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
             >
-              Update todo item
+              Add todo item
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="19"
@@ -288,6 +269,11 @@ const Todo = ({ item }) => {
       </div>
     </div>
   );
+  
+  
+  
+  
+  
 };
 
 export default Todo;

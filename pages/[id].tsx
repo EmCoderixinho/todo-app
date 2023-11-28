@@ -117,28 +117,28 @@ const Todo = ({ item }) => {
 
   return (
     <div className="flex items-center justify-center mt-20">
-      <div className="max-w-xl w-full rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800 flex flex-col p-8">
+      <div className="max-w-xl w-full rounded-lg border border-gray-700 bg-gray-800 flex flex-col p-8">
         <img className="rounded-t-lg" src="" alt="" />
   
         <div className="flex flex-col flex-grow p-5">
-          <h5 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
+          <h5 className="text-3xl font-bold tracking-tight text-white mb-4">
             {item.title}
           </h5>
-          <p className="mb-6 flex-grow overflow-hidden text-lg text-gray-700 dark:text-gray-400">
+          <p className="mb-6 flex-grow overflow-hidden text-lg text-gray-400">
             {item.description}
           </p>
           {item.hasDeadline && (
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-gray-300">
               Due to {item.day}/{item.month}/{item.year} until {item.hours}:{item.minutes}
             </p>
           )}
   
           {/* attached file */}
-  
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default Todo;

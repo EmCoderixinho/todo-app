@@ -57,25 +57,20 @@ const Navbar = () => {
 
   return (
     <>
-      <nav
-        className={`bg-white border-gray-200 dark:bg-gray-900 ${styles.navbar}`}
-      >
+      <nav className={`bg-gray-900 ${styles.navbar}`}>
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
             <Link href={"/"}>To-do</Link>
           </span>
-          <Link
-              href="/public"
-              className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >
-              Public todos
-            </Link>
+          <Link href="/public" className="block py-2 px-3 text-white rounded hover:bg-gray-700">
+            Public todos
+          </Link>
           <button
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-controls="navbar-default"
-            aria-expanded={isNavOpen == true ? "true" : "false"}
-            onClick={toggleNav} // Handle the toggle behavior
+            aria-expanded={isNavOpen ? "true" : "false"}
+            onClick={toggleNav}
           >
             <span className="sr-only">Open main menu</span>
             <svg
@@ -94,63 +89,44 @@ const Navbar = () => {
               />
             </svg>
           </button>
-          <div
-            className={`w-full md:flex md:w-auto ${
-              isNavOpen ? "block" : "hidden"
-            }`}
-            id="navbar-default"
-          >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              {!context.user && ( //check if user is not logged in we give him option to log in or sign up if he does not have an account
+          <div className={`w-full md:flex md:w-auto ${isNavOpen ? "block" : "hidden"}`} id="navbar-default">
+            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-900 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-900">
+              {!context.user && (
                 <>
                   <li>
-                    <Link
-                      href="/login"
-                      className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    >
+                    <Link href="/login" className="block py-2 px-3 text-white rounded hover:bg-gray-700">
                       Log in
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/register"
-                      className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    >
+                    <Link href="/register" className="block py-2 px-3 text-white rounded hover:bg-gray-700">
                       Register
                     </Link>
                   </li>
                 </>
               )}
-              {context.user &&
-                documents[0] && ( //check if user is logged in and if he is we give him an option to log out dodaj hello user.fullName
-                  <>
-                    <li>
-                      <p className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        Hello {documents[0] ? documents[0].fullName : ""}
-                      </p>
-                    </li>
-                    <li>
-                      <Link
-                        href="/new"
-                        className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                      >
-                        Add task
-                      </Link>
-                    </li>
-                    <li>
-                      <button
-                        onClick={logout}
-                        className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                      >
-                        Log out
-                      </button>
-                    </li>
-                  </>
-                )}
-
+              {context.user && documents[0] && (
+                <>
+                  <li>
+                    <p className="block py-2 px-3 text-white rounded hover:bg-gray-700">
+                      Hello {documents[0] ? documents[0].fullName : ""}
+                    </p>
+                  </li>
+                  <li>
+                    <Link href="/new" className="block py-2 px-3 text-white rounded hover:bg-gray-700">
+                      Add task
+                    </Link>
+                  </li>
+                  <li>
+                    <button onClick={logout} className="block py-2 px-3 text-white rounded hover:bg-gray-700">
+                      Log out
+                    </button>
+                  </li>
+                </>
+              )}
               {error && (
                 <li>
-                  <h2 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                  <h2 className="block py-2 px-3 text-white rounded hover:bg-gray-700">
                     {error}
                   </h2>
                 </li>
