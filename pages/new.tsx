@@ -2,9 +2,10 @@ import { useRouter } from "next/router";
 import { useAuthContext } from "../hooks/useAuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
+
+import styles from "../styles/new.module.css"
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -62,13 +63,12 @@ export default function Home() {
       hours,
       minutes,
       isPublic,
-      attachedFile: null
+      attachedFile: null,
     };
 
     console.log(todoItem);
-    
 
-    addDocument(todoItem, attachedFile)
+    addDocument(todoItem, attachedFile);
   };
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function Home() {
   }
   //authisready==false pokazi loading
   return (
-    <div className="dark:bg-gray-900 dark:border-gray-700 bg-gray-100 h-screen flex items-center justify-center">
+    <div className={`${styles.new} dark:bg-gray-900 dark:border-gray-700 bg-gray-100 flex items-center justify-center relative`}>
       <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           {/* Post Content Section */}
@@ -142,23 +142,35 @@ export default function Home() {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <div className="flex items-center">
-                <svg
-                  className="w-6 h-6 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  ></path>
-                </svg>
-                <span className="ml-2 text-sm text-gray-300">
-                  Choose a file
-                </span>
+                {!attachedFile && (
+                  <>
+                    <svg
+                      className="w-6 h-6 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      ></path>
+                    </svg>
+                    <span className="ml-2 text-sm text-gray-300">
+                      Choose a file
+                    </span>
+                  </>
+                )}
+
+                {attachedFile && (
+                  <>
+                    <span className="ml-2 text-sm text-gray-300">
+                      Chosen file: {attachedFile.name}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>
