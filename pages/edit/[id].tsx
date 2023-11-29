@@ -54,6 +54,7 @@ const Todo = ({ item }) => {
   const [description, setDescription] = useState(item.description);
   const { user } = useAuthContext();
   const [attachedFile, setAttachedFile] = useState(item.attachedFile);
+  
 
   const router = useRouter();
 
@@ -116,7 +117,13 @@ const Todo = ({ item }) => {
 
     const res = await setDoc(doc(db, "todo-items", item.id), todoItem);
 
-    if (attachedFile) {
+    if(typeof attachedFile == 'string'){
+
+        todoItem.attachedFile = attachedFile;
+
+        const res = await setDoc(doc(db, "todo-items", item.id), todoItem);
+    }
+    else if (attachedFile) {
         // If there is an attached file, upload it to storage
         const uploadPath = `items/${item.id}/${attachedFile.name}`;
         const storageRef = ref(storage, uploadPath);
@@ -220,7 +227,7 @@ const Todo = ({ item }) => {
                 {attachedFile && (
                   <>
                     <span className="ml-2 text-sm text-gray-300">
-                      Chosen file: {attachedFile.name}
+                      Chosen file: {attachedFile.name ? attachedFile.name : "file selected"}
                     </span>
                   </>
                 )}

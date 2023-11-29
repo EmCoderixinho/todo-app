@@ -132,7 +132,7 @@ const Todo = ({ item }) => {
           </p>
           {item.hasDeadline && (
             <p className="text-gray-300">
-              Due to {item.day}/{item.month}/{item.year} until {item.hours}:{item.minutes}
+              Due to {item.day}/{item.month}/{item.year} until {item.hours < 10 ? "0" + item.hours : item.hours}:{item.minutes < 10 ? "0" + item.minutes : item.minutes}
             </p>
           )}
   
