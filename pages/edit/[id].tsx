@@ -24,23 +24,28 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
 export const getStaticProps = async (context) => {
   const id = context.params.id;
 
-  const docRef = doc(db, "todo-items", id);
+  try {
+    const docRef = doc(db, "todo-items", id);
 
-  const docSnap = await getDoc(docRef);
+    const docSnap = await getDoc(docRef);
 
-  const documents = docSnap.data();
-  documents.id = id;
+    const documents = docSnap.data();
+    documents.id = id;
 
-  return {
-    props: { item: documents },
-  };
+    return {
+      props: { item: documents },
+    };
+  } catch (error) {
+
+    console.log(error);
+  }
 };
 
 const Todo = ({ item }) => {
@@ -59,7 +64,7 @@ const Todo = ({ item }) => {
   const [attachedFile, setAttachedFile] = useState(item.attachedFile);
 
   const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const router = useRouter();
 
@@ -153,7 +158,6 @@ const Todo = ({ item }) => {
       setIsPending(false);
       router.push("/");
     } catch (err) {
-
       setError(err.message);
     }
 
@@ -328,7 +332,7 @@ const Todo = ({ item }) => {
               </button>
             )}
 
-            {isPending && error!='' && (
+            {isPending && error != "" && (
               <button
                 disabled
                 className="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
@@ -354,9 +358,7 @@ const Todo = ({ item }) => {
                 Loading...
               </button>
             )}
-            {
-              error && <h1>{error}</h1>
-            }
+            {error && <h1>{error}</h1>}
           </div>
         </form>
       </div>
