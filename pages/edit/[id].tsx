@@ -317,7 +317,7 @@ const Todo = ({ item }) => {
                 type="submit"
                 className="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
               >
-                Add todo item
+                Edit todo item
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="19"
