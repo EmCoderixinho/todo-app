@@ -47,7 +47,11 @@ export const getStaticProps = async (context) => {
 const Todo = ({ item }) => {
   //console.log(item);
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    item.hasDeadline
+      ? new Date(item.year, item.month - 1, item.day, item.hours, item.minutes)
+      : null
+  );
   const [hasDeadline, setHasDeadline] = useState(item.hasDeadline);
   const [isPublic, setIsPublic] = useState(item.isPublic);
   const [title, setTitle] = useState(item.title);
@@ -115,13 +119,13 @@ const Todo = ({ item }) => {
     //console.log(user);
     
 
-    const res = await setDoc(doc(db, "todo-items", item.id), todoItem);
+    await setDoc(doc(db, "todo-items", item.id), todoItem);
 
     if(typeof attachedFile == 'string'){
 
         todoItem.attachedFile = attachedFile;
 
-        const res = await setDoc(doc(db, "todo-items", item.id), todoItem);
+        await setDoc(doc(db, "todo-items", item.id), todoItem);
     }
     else if (attachedFile) {
         // If there is an attached file, upload it to storage
@@ -136,7 +140,7 @@ const Todo = ({ item }) => {
         // Get the download URL of the uploaded file
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
   
-        console.log(downloadURL);
+        //console.log(downloadURL);
 
         // Update the document in Firestore with the download URL
         await setDoc(doc(db, 'todo-items', item.id), {
@@ -300,10 +304,6 @@ const Todo = ({ item }) => {
       </div>
     </div>
   );
-  
-  
-  
-  
   
 };
 

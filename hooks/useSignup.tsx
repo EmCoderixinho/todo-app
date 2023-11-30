@@ -28,6 +28,7 @@ export const useSignup = () => {
           setDoc(doc(db, "users", userCredential.user.uid), {
             email,
             fullName,
+            id: userCredential.user.uid
           });
 
           //console.log("Document created in Firestore");

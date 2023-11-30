@@ -23,7 +23,7 @@ export const useCollection = (coll, _query) => {
     const unsub = onSnapshot(q,
       (snapshot) => {
 
-        console.log(snapshot);
+        //console.log(snapshot);
         let results = [];
 
         snapshot.forEach((doc) => {

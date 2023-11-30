@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { db } from "../firebase/config";
 import styles from "../styles/new.module.css";
 import { collection, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useRouter } from "next/router";
-import Image from "next/image";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const getStaticPaths = async () => {
@@ -42,87 +40,46 @@ export const getStaticProps = async (context) => {
 };
 
 const Todo = ({ item }) => {
-  //console.log(item);
-
-  const [selectedDate, setSelectedDate] = useState<Date | null>();
-  const [hasDeadline, setHasDeadline] = useState(item.hasDeadline);
-  const [isPublic, setIsPublic] = useState(item.isPublic);
-  const [title, setTitle] = useState(item.title);
-  const [description, setDescription] = useState(item.description);
-  const [attachedFile, setAttachedFile] = useState(item.attachedFile);
-
   const { user } = useAuthContext();
-  const router = useRouter()
+  const router = useRouter();
 
   if (!user) {
     router.push("/login");
     return null;
   }
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
-
-  const handleFileChange = (e) => {
-    setAttachedFile(null);
-
-    let selected = e.target.files[0];
-
-    if (!selected || !selected.type.includes("image")) {
-      return;
-    }
-
-    setAttachedFile(selected);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    let day = null,
-      month = null,
-      year = null,
-      hours = null,
-      minutes = null;
-
-    if (selectedDate && hasDeadline) {
-      day = selectedDate.getDate();
-      month = selectedDate.getMonth() + 1; // Adding 1 to get the correct month (January is 0)
-      year = selectedDate.getFullYear();
-      hours = selectedDate.getHours();
-      minutes = selectedDate.getMinutes();
-    }
-
-    let todoItem = {
-      uid: user.uid,
-      title,
-      description,
-      hasDeadline,
-      day,
-      month,
-      year,
-      hours,
-      minutes,
-      isPublic,
-      attachedFile: null,
-      done: false,
-    };
-
-    //console.log(todoItem);
-    //console.log(user);
-
-    await setDoc(doc(db, "todo-items", item.id), todoItem);
-
-    //addDocument(todoItem, attachedFile);
-  };
+  if (router.isFallback) {
+    return (
+      <div className="flex items-center justify-center h-screen" role="status">
+        <svg
+          aria-hidden="true"
+          className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <span className="sr-only">Loading Page...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center mt-20">
       <div className="max-w-xl w-full rounded-lg border border-gray-700 bg-gray-800 flex flex-col p-8">
         <img className="rounded-t-lg" src="" alt="" />
         {item.attachedFile && (
-              <img className="rounded-t-lg" src={item.attachedFile} alt=""/>
-            )}
-  
+          <img className="rounded-t-lg" src={item.attachedFile} alt="" />
+        )}
+
         <div className="flex flex-col flex-grow p-5">
           <h5 className="text-3xl font-bold tracking-tight text-white mb-4">
             {item.title}
@@ -130,18 +87,17 @@ const Todo = ({ item }) => {
           <p className="mb-6 flex-grow overflow-hidden text-lg text-gray-400">
             {item.description}
           </p>
-          {item.hasDeadline && (
+          {item.hasDeadline && item.year && (
             <p className="text-gray-300">
-              Due to {item.day}/{item.month}/{item.year} until {item.hours < 10 ? "0" + item.hours : item.hours}:{item.minutes < 10 ? "0" + item.minutes : item.minutes}
+              Due to {item.day}/{item.month}/{item.year} until{" "}
+              {item.hours < 10 ? "0" + item.hours : item.hours}:
+              {item.minutes < 10 ? "0" + item.minutes : item.minutes}
             </p>
           )}
-  
-          {/* attached file */}
         </div>
       </div>
     </div>
   );
-  
 };
 
 export default Todo;

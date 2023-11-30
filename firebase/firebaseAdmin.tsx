@@ -1,33 +1,45 @@
+import {
+  AppOptions,
+  cert,
+  getApp,
+  getApps,
+  initializeApp,
+  ServiceAccount,
+} from "firebase-admin/app";
+
 interface FirebaseAdminAppParams {
   projectId: string;
   clientEmail: string;
   privateKey: string;
 }
 
-import admin from 'firebase-admin';
- 
+import admin from "firebase-admin";
+
 function formatFirebasePrivateKey(key: string) {
-  return key.replace(/\\n/g, '\n');
+  return key.replace(/\\n/g, "\n");
 }
- 
+
 export function createFirebaseAdminApp(params: FirebaseAdminAppParams) {
   const privateKey = formatFirebasePrivateKey(params.privateKey);
-  
+
   // if already created, return the same instance
-  if (admin.apps.length > 0) {
-    return admin.app();
+  if (getApps().length === 0) {
+    // create certificate
+
+    const credentials: ServiceAccount = {
+
+      projectId: params.projectId,
+      clientEmail: params.clientEmail,
+      privateKey,
+    }
+
+    const options: AppOptions = {
+
+      credential: cert(credentials)
+    }
+
+    return initializeApp(options);
+  } else {
+    return getApp();
   }
- 
-  // create certificate
-  const cert = admin.credential.cert({
-    projectId: params.projectId,
-    clientEmail: params.clientEmail,
-    privateKey,
-  });
- 
-  // initialize admin app
-  return admin.initializeApp({
-    credential: cert,
-    projectId: params.projectId
-  });
 }

@@ -22,7 +22,7 @@ const Users = () => {
       <h1 className="text-2xl font-bold tracking-tight mb-2 text-white">Users List</h1>
       <ul>
         {users.map((user) => (
-          <div className="flex flex-col flex-grow p-5">
+          <div className="flex flex-col flex-grow p-5" key={user.id}>
             <h5 className="text-2xl font-bold tracking-tight mb-2 text-white">
               User Name: {user.fullName}
             </h5>
