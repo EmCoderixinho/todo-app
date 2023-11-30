@@ -1,34 +1,43 @@
+// Import necessary modules and components
 import { useState } from "react";
-import styles from "../styles/signup.module.css";
-//import { useSignup } from "../hooks/useSignup";
 import { useRouter } from "next/router";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useSignup } from "../hooks/useSignup";
 
-export default function Login() {
+// Define the Login component
+export default function Register() {
+  // State variables to store user input
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+
+  // Custom hook for user authentication
   const { signup, isPending, error } = useSignup();
   const router = useRouter();
   const { user } = useAuthContext();
 
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Call signup function from useSignup hook
     signup(email, password, fullName);
   };
 
+  // Redirect to home page if user is already authenticated
   if (user) router.push("/");
 
+  // Render the login form
   return (
     <main className="mx-auto flex w-full items-center justify-center bg-gray-900 text-white mt-16">
       <form
         className="flex w-[30rem] flex-col space-y-10"
         onSubmit={handleSubmit}
       >
+        {/* Title */}
         <div className="text-center text-4xl font-medium">Register</div>
-  
+
+        {/* Email Input */}
         <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
           <input
             type="email"
@@ -38,7 +47,8 @@ export default function Login() {
             value={email}
           />
         </div>
-  
+
+        {/* Password Input */}
         <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
           <input
             type="password"
@@ -48,7 +58,8 @@ export default function Login() {
             value={password}
           />
         </div>
-  
+
+        {/* Full Name Input */}
         <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
           <input
             type="text"
@@ -58,18 +69,22 @@ export default function Login() {
             value={fullName}
           />
         </div>
-  
+
+        {/* Submit Button */}
         {!isPending && (
           <button className="transform rounded-sm bg-indigo-600 py-2 font-bold duration-300 hover:bg-indigo-400">
             REGISTER
           </button>
         )}
+
+        {/* Loading Button */}
         {isPending && (
           <button
             disabled
             type="button"
             className="transform rounded-sm bg-indigo-600 py-2 font-bold hover:bg-indigo-500 "
           >
+            {/* Loading Spinner */}
             <svg
               aria-hidden="true"
               role="status"
@@ -78,6 +93,7 @@ export default function Login() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              {/* Loading Spinner Paths */}
               <path
                 d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                 fill="#E5E7EB"
@@ -90,6 +106,8 @@ export default function Login() {
             Loading...
           </button>
         )}
+
+        {/* Display error message if there is an error */}
         {error && <p>{error}</p>}
       </form>
     </main>

@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 const Layout = ({ children }) => {
   const { authIsReady } = useAuthContext(); //checks is authentication has been done
 
-  if (!authIsReady)
+  if (!authIsReady) // if the authentication has not been done it means we can load Loading page spinner
     return (
       <div className="flex items-center justify-center h-screen" role="status">
         <svg

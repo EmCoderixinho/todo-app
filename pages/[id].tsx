@@ -5,14 +5,11 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useRouter } from "next/router";
 import "react-datepicker/dist/react-datepicker.css";
 
+// Fetches all todo item IDs for getStaticPaths
 export const getStaticPaths = async () => {
   const documents = await getDocs(collection(db, "todo-items"));
 
-  //console.log(documents);
-
   const paths = documents.docs.map((item) => {
-    //console.log(item.id);
-
     return {
       params: { id: item.id },
     };
@@ -24,11 +21,11 @@ export const getStaticPaths = async () => {
   };
 };
 
+// Fetches a specific todo item for getStaticProps
 export const getStaticProps = async (context) => {
   const id = context.params.id;
 
   const docRef = doc(db, "todo-items", id);
-
   const docSnap = await getDoc(docRef);
 
   const documents = docSnap.data();
@@ -43,14 +40,17 @@ const Todo = ({ item }) => {
   const { user } = useAuthContext();
   const router = useRouter();
 
+  // Redirects to login page if user is not authenticated
   if (!user) {
     router.push("/login");
     return null;
   }
 
+  // Loading spinner while the page is in fallback state
   if (router.isFallback) {
     return (
       <div className="flex items-center justify-center h-screen" role="status">
+        {/* Loading spinner SVG */}
         <svg
           aria-hidden="true"
           className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -58,6 +58,7 @@ const Todo = ({ item }) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          {/* Spinner paths */}
           <path
             d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
             fill="currentColor"
@@ -72,21 +73,25 @@ const Todo = ({ item }) => {
     );
   }
 
+  // Render the todo item details
   return (
     <div className="flex items-center justify-center mt-20">
       <div className="max-w-xl w-full rounded-lg border border-gray-700 bg-gray-800 flex flex-col p-8">
-        <img className="rounded-t-lg" src="" alt="" />
+        {/* Display attached image if available */}
         {item.attachedFile && (
           <img className="rounded-t-lg" src={item.attachedFile} alt="" />
         )}
 
         <div className="flex flex-col flex-grow p-5">
+          {/* Todo item title */}
           <h5 className="text-3xl font-bold tracking-tight text-white mb-4">
             {item.title}
           </h5>
+          {/* Todo item description */}
           <p className="mb-6 flex-grow overflow-hidden text-lg text-gray-400">
             {item.description}
           </p>
+          {/* Display deadline if available */}
           {item.hasDeadline && item.year && (
             <p className="text-gray-300">
               Due to {item.day}/{item.month}/{item.year} until{" "}

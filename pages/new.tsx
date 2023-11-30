@@ -1,3 +1,4 @@
+// Import necessary modules and components
 import { useRouter } from "next/router";
 import { useAuthContext } from "../hooks/useAuthContext";
 import DatePicker from "react-datepicker";
@@ -7,7 +8,9 @@ import { useFirestore } from "../hooks/useFirestore";
 
 import styles from "../styles/new.module.css";
 
-export default function Home() {
+// Define the New component
+export default function New() {
+  // State variables for form inputs and UI state
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [hasDeadline, setHasDeadline] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
@@ -17,13 +20,16 @@ export default function Home() {
   const { addDocument, response } = useFirestore("todo-items");
   const [fileError, setFileError] = useState("");
 
+  // Get user and router from custom hooks
   const { user } = useAuthContext();
   const router = useRouter();
 
+  // Handle date change in the DatePicker component
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
 
+  // Handle file selection in the file input
   const handleFileChange = (e) => {
     setAttachedFile(null);
 
@@ -40,9 +46,11 @@ export default function Home() {
     setAttachedFile(selected);
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Extract date and time details if a deadline is set
     let day = null,
       month = null,
       year = null,
@@ -57,6 +65,7 @@ export default function Home() {
       minutes = selectedDate.getMinutes();
     }
 
+    // Create todo item object
     let todoItem = {
       uid: user.uid,
       title,
@@ -72,39 +81,35 @@ export default function Home() {
       done: false,
     };
 
-    //console.log(todoItem);
-    //console.log(user);
-
+    // Add todo item to Firestore
     addDocument(todoItem, attachedFile);
 
-    ///router.push('/');
+    // Redirect to home page after submission
+    // router.push('/');
   };
 
+  // Use effect to redirect to home page after successful form submission
   useEffect(() => {
-    if (response.succes) {
+    if (response.success) {
       router.push("/");
     }
-  }, [response.succes]);
+    
+  }, [response.success]);
 
+  // Redirect to login page if user is not authenticated
   if (!user) {
     router.push("/login");
     return null;
   }
 
+  // Render the form
   return (
-    <div
-      className={`${styles.new} bg-gray-900 border-gray-700 flex items-center justify-center relative`}
-    >
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-md w-full p-8 rounded-lg shadow-md"
-      >
+    <div className={`${styles.new} bg-gray-900 border-gray-700 flex items-center justify-center relative`}>
+      <form onSubmit={handleSubmit} className="max-w-md w-full p-8 rounded-lg shadow-md">
         {/* Post Content Section */}
         <div className="mb-6">
-          <label
-            htmlFor="title"
-            className="block text-gray-200 text-sm font-bold mb-2"
-          >
+          {/* Title input */}
+          <label htmlFor="title" className="block text-gray-200 text-sm font-bold mb-2">
             Title:
           </label>
           <input
@@ -120,11 +125,9 @@ export default function Home() {
             className="w-full border-2 rounded-md px-4 py-2 leading-5 transition duration-150 ease-in-out sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-700 text-gray-200"
           />
         </div>
+        {/* Description input */}
         <div className="mb-6">
-          <label
-            htmlFor="description"
-            className="block text-gray-200 text-sm font-bold mb-2"
-          >
+          <label htmlFor="description" className="block text-gray-200 text-sm font-bold mb-2">
             Description:
           </label>
           <textarea
@@ -142,10 +145,8 @@ export default function Home() {
         </div>
         {/* File Attachment Section */}
         <div className="mb-6">
-          <label
-            htmlFor="fileAttachment"
-            className="block text-gray-200 text-sm font-bold mb-2"
-          >
+          {/* File input */}
+          <label htmlFor="fileAttachment" className="block text-gray-200 text-sm font-bold mb-2">
             Attach File:
           </label>
           <div className="relative border-2 rounded-md px-4 py-3 bg-gray-700 flex items-center justify-between hover:border-blue-500 transition duration-150 ease-in-out">
@@ -158,6 +159,7 @@ export default function Home() {
             />
             <div className="flex items-center">
               {!attachedFile && (
+                // File not chosen
                 <>
                   <svg
                     className="w-6 h-6 text-gray-400"
@@ -180,6 +182,7 @@ export default function Home() {
               )}
 
               {attachedFile && (
+                // File chosen
                 <>
                   <span className="ml-2 text-sm text-gray-300">
                     Chosen file: {attachedFile.name}
@@ -188,11 +191,13 @@ export default function Home() {
               )}
             </div>
           </div>
+          {/* File error message */}
           {fileError !== "" && (
             <p className="ml-2 text-sm text-red-600 mt-2">{fileError}</p>
           )}
         </div>
 
+        {/* Deadline checkbox */}
         <div className="flex items-center mb-4">
           <input
             id="deadline_box"
@@ -209,11 +214,9 @@ export default function Home() {
           </label>
         </div>
 
+        {/* Deadline date and time input */}
         <div className="mb-6">
-          <label
-            htmlFor="deadline"
-            className="block text-gray-200 text-sm font-bold mb-2"
-          >
+          <label htmlFor="deadline" className="block text-gray-200 text-sm font-bold mb-2">
             Deadline:
           </label>
           <DatePicker
@@ -226,6 +229,7 @@ export default function Home() {
           />
         </div>
 
+        {/* Public checkbox */}
         <div className="flex items-center mb-4">
           <input
             id="public"
@@ -241,9 +245,11 @@ export default function Home() {
             Public
           </label>
         </div>
-        {/* Submit Button and Character Limit Section */}
+
+        {/* Submit Button */}
         <div className="flex items-center justify-between">
-          {response.isPending && (
+          {/* Render different button content based on form submission status */}
+          {!response.isPending && (
             <button
               type="submit"
               className="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
@@ -262,11 +268,12 @@ export default function Home() {
               </svg>
             </button>
           )}
-          {!response.isPending && (
+          {response.isPending && (
             <button
-              type="submit"
+              disabled
               className="flex justify-center items-center bg-blue-500 hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue text-white py-2 px-4 rounded-md transition duration-300 gap-2"
             >
+              {/* Loading animation for submission in progress */}
               <svg
                 aria-hidden="true"
                 role="status"
@@ -288,8 +295,8 @@ export default function Home() {
             </button>
           )}
         </div>
+        {/* Display error message if form submission fails */}
         {response.error && (
-
           <p>{response.error}</p>
         )}
       </form>

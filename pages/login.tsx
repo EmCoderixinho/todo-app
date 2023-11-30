@@ -16,6 +16,7 @@ export default function Login() {
     login(email, password);
   };
 
+  // Redirect to home page if user is authenticated
   if (user) router.push("/");
 
   return (
@@ -24,8 +25,10 @@ export default function Login() {
         className="flex w-[30rem] flex-col space-y-10"
         onSubmit={handleSubmit}
       >
+        {/* Login Form */}
         <div className="text-center text-4xl font-medium">Log In</div>
 
+        {/* Email Input */}
         <div className="w-full transform border-b-2 dark:border-indigo-500">
           <input
             type="email"
@@ -36,6 +39,7 @@ export default function Login() {
           />
         </div>
 
+        {/* Password Input */}
         <div className="w-full transform border-b-2 dark:border-indigo-500">
           <input
             type="password"
@@ -46,11 +50,14 @@ export default function Login() {
           />
         </div>
 
+        {/* Login Button */}
         {!isPending && (
           <button className="transform rounded-sm bg-indigo-600 py-2 font-bold hover:bg-indigo-500">
             LOG IN
           </button>
         )}
+
+        {/* Loading Button */}
         {isPending && (
           <button
             disabled
@@ -77,6 +84,8 @@ export default function Login() {
             Loading...
           </button>
         )}
+
+        {/* Display error message if login fails */}
         {error && <p>{error}</p>}
       </form>
     </main>
